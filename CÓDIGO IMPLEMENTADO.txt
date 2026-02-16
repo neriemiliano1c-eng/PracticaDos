@@ -1,0 +1,15 @@
+CÓDIGO IMPLEMENTADO
+
+Coloca el código en formato monoespaciado:
+
+int valorA1 = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  valorA1 = analogRead(A1);
+  Serial.println(valorA1);
+  delay(500);
+}
