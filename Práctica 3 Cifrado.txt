@@ -1,0 +1,64 @@
+Práctica 3: Cifrado
+/*
+  Práctica - Cifrado César
+  Autor: Emiliano Neri
+*/
+
+String mensaje = "";
+int desplazamiento = 3;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("=== CIFRADO CESAR ===");
+  Serial.println("Ingrese un mensaje y presione Enter:");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+
+    mensaje = Serial.readStringUntil('\n');
+    mensaje.trim();
+
+    String cifrado = "";
+    String descifrado = "";
+
+    // PROCESO DE CIFRADO
+    for (int i = 0; i < mensaje.length(); i++) {
+      char c = mensaje[i];
+
+      if (c >= 'A' && c <= 'Z') {
+        c = ((c - 'A' + desplazamiento) % 26) + 'A';
+      }
+      else if (c >= 'a' && c <= 'z') {
+        c = ((c - 'a' + desplazamiento) % 26) + 'a';
+      }
+
+      cifrado += c;
+    }
+
+    // PROCESO DE DESCIFRADO
+    for (int i = 0; i < cifrado.length(); i++) {
+      char c = cifrado[i];
+
+      if (c >= 'A' && c <= 'Z') {
+        c = ((c - 'A' - desplazamiento + 26) % 26) + 'A';
+      }
+      else if (c >= 'a' && c <= 'z') {
+        c = ((c - 'a' - desplazamiento + 26) % 26) + 'a';
+      }
+
+      descifrado += c;
+    }
+
+    Serial.println("\nMensaje original:");
+    Serial.println(mensaje);
+
+    Serial.println("Mensaje cifrado:");
+    Serial.println(cifrado);
+
+    Serial.println("Mensaje descifrado:");
+    Serial.println(descifrado);
+
+    Serial.println("\nIngrese otro mensaje:");
+  }
+}
