@@ -1,0 +1,77 @@
+Código Lectura
+byte llave = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  if(Serial.available()){
+    
+    llave = Serial.parseInt();   // Recibe llave
+    delay(500);
+
+    Serial.print("Mensaje recibido: ");
+
+    while(Serial.available()){
+      char cifrado = Serial.read();
+      char descifrado = cifrado ^ llave;
+      Serial.print(descifrado);
+    }
+
+    Serial.println();
+    Serial.println(llave);  // Devuelve la llave
+
+  }
+
+}
+
+Implementación del Cifrado (Emisor)
+
+byte llave = 99;  
+String mensaje = "HOLA";
+
+void setup() {
+  Serial.begin(9600);
+  delay(2000);
+
+  Serial.println(llave);   // Enviar llave primero
+
+  for(int i = 0; i < mensaje.length(); i++){
+    char cifrado = mensaje[i] ^ llave;
+    Serial.write(cifrado);
+  }
+}
+
+void loop() {
+
+  if(Serial.available()){
+    int confirmacion = Serial.parseInt();
+    Serial.print("Llave regresada: ");
+    Serial.println(confirmacion);
+  }
+
+}
+
+
+Lectura de Puertos Digitales
+
+Código implementado:
+
+// Código lectura digital
+int boton = 2;
+int estado = 0;
+
+void setup() {
+  pinMode(boton, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  estado = digitalRead(boton);
+  Serial.println(estado);
+  delay(500);
+}
+
+
