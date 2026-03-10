@@ -1,0 +1,37 @@
+A.Código Arduino Emisor
+
+#include <avr/sleep.h>
+
+int clave;
+int dato;
+int cifrado;
+
+void setup(){
+
+ Serial.begin(9600);
+ randomSeed(analogRead(0));
+
+}
+
+void loop(){
+
+ clave = random(1,255);
+ dato = random(0,2);
+
+ cifrado = dato ^ clave;
+
+ Serial.print("Dato: ");
+ Serial.println(dato);
+
+ Serial.print("Clave: ");
+ Serial.println(clave);
+
+ Serial.write(cifrado);
+
+ delay(2000);
+
+ set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+ sleep_enable();
+ sleep_mode();
+
+}
