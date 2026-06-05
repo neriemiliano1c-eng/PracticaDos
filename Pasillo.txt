@@ -1,0 +1,129 @@
+ // ==========================
+  // LEER SENSOR 1
+  // ==========================
+
+  digitalWrite(trigEntrada, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigEntrada, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(trigEntrada, LOW);
+
+  long duracion1 = pulseIn(echoEntrada, HIGH);
+
+  float distancia1 = duracion1 * 0.034 / 2;
+
+  // ==========================
+  // LEER SENSOR 2
+  // ==========================
+
+  digitalWrite(trigSalida, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigSalida, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(trigSalida, LOW);
+
+  long duracion2 = pulseIn(echoSalida, HIGH);
+
+  float distancia2 = duracion2 * 0.034 / 2;
+
+  // ====================================
+  // ENTRADA
+  // SENSOR 1 -> SENSOR 2
+  // ====================================
+
+  if(distancia1 < 15 && distancia1 > 0){
+
+    delay(300);
+
+    // volver leer sensor 2
+    digitalWrite(trigSalida, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigSalida, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(trigSalida, LOW);
+
+    long d2 = pulseIn(echoSalida, HIGH);
+
+    float dist2 = d2 * 0.034 / 2;
+
+    if(dist2 < 15 && dist2 > 0){
+
+      if(personas < 5){
+
+        personas++;
+
+        Serial.print("PERSONA ENTRO | TOTAL: ");
+        Serial.println(personas);
+      }
+
+      else{
+
+        Serial.println("SALON LLENO");
+
+        digitalWrite(buzzer, HIGH);
+        delay(1000);
+        digitalWrite(buzzer, LOW);
+      }
+
+      delay(1500);
+    }
+  }
+
+  // ====================================
+  // SALIDA
+  // SENSOR 2 -> SENSOR 1
+  // ====================================
+
+  if(distancia2 < 15 && distancia2 > 0){
+
+    delay(300);
+
+    // volver leer sensor 1
+    digitalWrite(trigEntrada, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigEntrada, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(trigEntrada, LOW);
+
+    long d1 = pulseIn(echoEntrada, HIGH);
+
+    float dist1 = d1 * 0.034 / 2;
+
+    if(dist1 < 15 && dist1 > 0){
+
+      if(personas > 0){
+
+        personas--;
+
+        Serial.print("PERSONA SALIO | TOTAL: ");
+        Serial.println(personas);
+      }
+
+      delay(1500);
+    }
+  }
+
+  // ====================================
+  // CONTROL DEL SALON¿
+  // ====================================
+
+  if(personas < 5){
+
+    digitalWrite(ledVerde, HIGH);
+    digitalWrite(ledRojo, LOW);
+  }
+
+  else{
+
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledRojo, HIGH);
+  }
+}

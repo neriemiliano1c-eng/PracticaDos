@@ -1,0 +1,151 @@
+// ==========================
+// SEMAFORO INTELIGENTE
+// ==========================
+
+// LEDs
+int rojo = 8;
+int amarillo = 9;
+int verde = 10;
+
+// Botón
+int boton = 2;
+
+// Buzzer
+int buzzer = 5;
+
+// Ultrasonico
+int trigPin = 7;
+int echoPin = 6;
+
+// LDR
+int ldr = A0;
+
+void setup() {
+
+  // LEDs
+  pinMode(rojo, OUTPUT);
+  pinMode(amarillo, OUTPUT);
+  pinMode(verde, OUTPUT);
+
+  // Botón
+  pinMode(boton, INPUT_PULLUP);
+
+  // Buzzer
+  pinMode(buzzer, OUTPUT);
+
+  // Ultrasonico
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  // =====================
+  // LDR
+  // =====================
+
+  int luz = analogRead(ldr);
+
+  Serial.println(luz);
+
+  // =====================
+  // MODO NOCHE
+  // =====================
+
+  if(luz < 350){
+
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+
+    digitalWrite(amarillo, HIGH);
+    delay(500);
+
+    digitalWrite(amarillo, LOW);
+    delay(500);
+
+    return;
+  }
+
+  // =====================
+  // ESTADO NORMAL
+  // =====================
+
+  digitalWrite(rojo, HIGH);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(verde, LOW);
+
+  // =====================
+  // BOTON PEATON
+  // =====================
+
+  if(digitalRead(boton) == LOW){
+
+    // amarillo
+    digitalWrite(rojo, LOW);
+    digitalWrite(amarillo, HIGH);
+
+    delay(2000);
+
+    // rojo
+    digitalWrite(amarillo, LOW);
+    digitalWrite(rojo, HIGH);
+
+    // buzzer
+    for(int i=0; i<10; i++){
+
+      digitalWrite(buzzer, HIGH);
+      delay(200);
+
+      digitalWrite(buzzer, LOW);
+      delay(200);
+    }
+
+    delay(3000);
+  }
+
+  // =====================
+  // ULTRASONICO
+  // =====================
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+
+  float distance = duration * 0.034 / 2;
+
+  Serial.print("Distancia: ");
+  Serial.println(distance);
+
+  // =====================
+  // DETECTA OBJETO
+  // =====================
+
+  if(distance < 15 && distance > 0){
+
+    // VERDE
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, HIGH);
+
+    delay(5000);
+
+    // AMARILLO
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, HIGH);
+
+    delay(2000);
+
+    // ROJO
+    digitalWrite(amarillo, LOW);
+    digitalWrite(rojo, HIGH);
+
+    delay(3000);
+  }
+}
